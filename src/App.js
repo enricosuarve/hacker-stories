@@ -7,10 +7,12 @@ const welcome = {
 
 
 const getTitle = (title) => {
+    console.log('getting title');
     return title;
 }
 
 const App = () => {
+    console.log('App renders');
     const stories = [
         {
             title: 'React',
@@ -19,7 +21,7 @@ const App = () => {
             num_comments: 3,
             points: 4,
             objectID: 0,
-            test: "wwwww"
+            test: "test extra prop"
         },
         {
             title: 'Redux',
@@ -31,7 +33,7 @@ const App = () => {
         },
     ];
 
-    return(
+    return (
         <div>
             <h1>
                 {welcome.greeting} {welcome.title}<br/>
@@ -44,35 +46,49 @@ const App = () => {
 }
 
 
-const List = (props) => (
-    <ul>
-        {props.list.map((item) => (
-        <Item key={item.objectID} item={item} extraline={" test"}/>
-            ))}
-    </ul>
-);
-
-const Item =(props)=>(
-    <li key={props.item.objectID} id={props.item.test}>
-        {props.item.title}
-        &nbsp;{props.extraline}
+const List = (props) => {
+    console.log('List renders');
+    return (
         <ul>
-            <li>{props.item.url}</li>
+            {props.list.map((item) => (
+                <Item key={item.objectID} item={item} extraline={" test"}/>
+            ))}
         </ul>
-    </li>
+    );
+}
 
-)
+const Item = (props) => {
+    console.log("Item renders")
+    return (
+        <li key={props.item.objectID} id={props.item.test}>
+            {props.item.title}
+            &nbsp;{props.extraline}
+            <ul>
+                <li>{props.item.url}</li>
+            </ul>
+        </li>
+
+    );
+}
+
 const Search = () => {
-    const handleChange = (event)=>{
+    console.log('Search Renders');
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const handleChange = (event) => {
         //synthetic event
         console.log(event);
         //value of target (here; element)
         console.log(event.target.value);
+        setSearchTerm(event.target.value);
     };
+    React.useState()
     return (
         <div>
             <label htmlFor="search">Search: </label>
             <input id="search" type="text" onChange={handleChange}/>
+            <p>
+                Searching for: <strong>{searchTerm}</strong>
+            </p>
         </div>
     );
 };
