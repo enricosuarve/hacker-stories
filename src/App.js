@@ -34,24 +34,38 @@ function App() {
         <div>
             <h1>
                 {welcome.greeting} {welcome.title}<br/>
-                hello {getTitle('React')}
+                Hello {getTitle('React')}
             </h1>
-            <label htmlFor={"search"}>Search: </label>
-            <input id="search" type={"text"}/>
-            <ul>
-                {list.map(function (item) {
-                    return  (
-                        <li key={item.objectID} id={item.test}>
-                            {item.title}
+            <Search/>
+            <List/>
+        </div>
+    );
+}
+
+function List() {
+    return (
+        <ul>
+            {list.map(function (item) {
+                return (
+                    <li key={item.objectID} id={item.test}>
+                        {item.title}
                         <ul>
                             <li>{item.url}</li>
                         </ul>
-                        </li>
-                    );
-                })}
-            </ul>
-        </div>
+                    </li>
+                );
+            })}
+        </ul>);
+}
+
+function Search() {
+    return (
+        <span>
+            <label htmlFor="search">Search: </label>
+            <input id="search" type="text"/>
+        </span>
     );
+
 }
 
 export default App;
