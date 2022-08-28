@@ -13,6 +13,8 @@ const getTitle = (title) => {
 
 const App = () => {
     console.log('App renders');
+
+    const [searchTerm, setSearchTerm] = React.useState('');
     const stories = [
         {
             title: 'React',
@@ -33,9 +35,14 @@ const App = () => {
         },
     ];
 
-    const handleSearch =(event)=>{
-        console.log('handleSearch: '+event.target.value);
+    const handleSearch = (event) => {
+        console.log('handleSearch: ' + event.target.value);
+        setSearchTerm(event.target.value);
     }
+
+    const searchedStories = stories.filter(function (story){
+        return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+    })
 
     return (
         <div>
@@ -43,8 +50,8 @@ const App = () => {
                 {welcome.greeting} {welcome.title}<br/>
                 Hello {getTitle('React')}
             </h1>
-            <Search onSearch={handleSearch}/>
-            <List list={stories} extraline={"test"}/>
+            <Search onSearch={handleSearch} searchTerm={searchTerm}/>
+            <List list={searchedStories} extraline={"test"}/>
         </div>
     );
 }
@@ -77,13 +84,11 @@ const Item = (props) => {
 
 const Search = (props) => {
     console.log('Search Renders');
-    const [searchTerm, setSearchTerm] = React.useState('');
     const handleChange = (event) => {
         //synthetic event
         console.log(event);
         //value of target (here; element)
-        console.log('Search handleChange: '+ event.target.value);
-        setSearchTerm(event.target.value);
+        console.log('Search handleChange: ' + event.target.value);
         props.onSearch(event)
     };
     React.useState()
@@ -92,7 +97,7 @@ const Search = (props) => {
             <label htmlFor="search">Search: </label>
             <input id="search" type="text" onChange={handleChange}/>
             <p>
-                Searching for: <strong>{searchTerm}</strong>
+                Searching for: <strong>{props.searchTerm}</strong>
             </p>
         </div>
     );
