@@ -33,13 +33,17 @@ const App = () => {
         },
     ];
 
+    const handleSearch =(event)=>{
+        console.log('handleSearch: '+event.target.value);
+    }
+
     return (
         <div>
             <h1>
                 {welcome.greeting} {welcome.title}<br/>
                 Hello {getTitle('React')}
             </h1>
-            <Search/>
+            <Search onSearch={handleSearch}/>
             <List list={stories} extraline={"test"}/>
         </div>
     );
@@ -71,15 +75,16 @@ const Item = (props) => {
     );
 }
 
-const Search = () => {
+const Search = (props) => {
     console.log('Search Renders');
     const [searchTerm, setSearchTerm] = React.useState('');
     const handleChange = (event) => {
         //synthetic event
         console.log(event);
         //value of target (here; element)
-        console.log(event.target.value);
+        console.log('Search handleChange: '+ event.target.value);
         setSearchTerm(event.target.value);
+        props.onSearch(event)
     };
     React.useState()
     return (
