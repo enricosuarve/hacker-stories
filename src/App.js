@@ -11,16 +11,22 @@ const getTitle = (title) => {
     return title;
 }
 
-const App = () => {
-    console.log('App renders');
 
-    const [searchTerm, setSearchTerm] = React.useState(
-        localStorage.getItem('search') || 'react'
+const useStorageState = (key, initialstate) => {
+    const [value, setValue] = React.useState(
+        localStorage.getItem(key) || initialstate
     );
 
     React.useEffect(() => {
-        localStorage.setItem('search', searchTerm);
-    }, [searchTerm]);
+        localStorage.setItem(key, value);
+    }, [value, key]);
+
+    return [value, setValue]
+
+}
+
+const App = () => {
+    console.log('App renders');
 
     const stories = [
         {
@@ -42,8 +48,9 @@ const App = () => {
         },
     ];
 
+    const [searchTerm, setSearchTerm] = useStorageState('search','React');
+
     const handleSearch = (event) => {
-        console.log('handleSearch: ' + event.target.value);
         setSearchTerm(event.target.value);
     };
 
@@ -89,16 +96,16 @@ const Item = ({item}) => (
     </li>
 )
 
-const Search = ({search, onSearch}) => (
-    <div>
+const Search = ({searchTerm, onSearch}) => (
+    <>
         <label htmlFor="search">Search: </label>
         <input
             id="search"
             type="text"
             onChange={onSearch}
-            value={search}
+            value={searchTerm}
         />
-    </div>
+    </>
 )
 
 
