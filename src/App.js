@@ -14,7 +14,7 @@ const getTitle = (title) => {
 const App = () => {
     console.log('App renders');
 
-    const [searchTerm, setSearchTerm] = React.useState('');
+    const [searchTerm, setSearchTerm] = React.useState('react');
     const stories = [
         {
             title: 'React',
@@ -52,6 +52,7 @@ const App = () => {
             </h1>
             <Search onSearch={handleSearch} searchTerm={searchTerm}/>
             <List list={searchedStories} extraline={"test"}/>
+            <button onClick={function test(){document.getElementById('search').value = "redux"}} value={"click"}/>
         </div>
     );
 }
@@ -95,7 +96,12 @@ const Search = (props) => {
     return (
         <div>
             <label htmlFor="search">Search: </label>
-            <input id="search" type="text" onChange={handleChange}/>
+            <input
+                id="search"
+                type="text"
+                onChange={handleChange}
+                value={props.onSearch}
+            />
             <p>
                 Searching for: <strong>{props.searchTerm}</strong>
             </p>
