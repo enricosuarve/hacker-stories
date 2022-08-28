@@ -14,7 +14,7 @@ const getTitle = (title) => {
 const App = () => {
     console.log('App renders');
 
-    const [searchTerm, setSearchTerm] = React.useState('react');
+    const [searchTerm, setSearchTerm] = React.useState('');
     const stories = [
         {
             title: 'React',
@@ -40,7 +40,7 @@ const App = () => {
         setSearchTerm(event.target.value);
     }
 
-    const searchedStories = stories.filter(function (story){
+    const searchedStories = stories.filter(function (story) {
         return story.title.toLowerCase().includes(searchTerm.toLowerCase());
     })
 
@@ -52,62 +52,45 @@ const App = () => {
             </h1>
             <Search onSearch={handleSearch} searchTerm={searchTerm}/>
             <List list={searchedStories} extraline={"test"}/>
-            <button onClick={function test(){document.getElementById('search').value = "redux"}} value={"click"}/>
         </div>
     );
 }
 
 
-const List = (props) => {
-    console.log('List renders');
-    return (
-        <ul>
-            {props.list.map((item) => (
-                <Item key={item.objectID} item={item} extraline={" test"}/>
-            ))}
-        </ul>
-    );
-}
-
-const Item = (props) => {
-    console.log("Item renders")
-    return (
-        <li key={props.item.objectID} id={props.item.test}>
-            {props.item.title}
-            &nbsp;{props.extraline}
-            <ul>
-                <li>{props.item.url}</li>
-            </ul>
-        </li>
-
-    );
-}
-
-const Search = (props) => {
-    console.log('Search Renders');
-    const handleChange = (event) => {
-        //synthetic event
-        console.log(event);
-        //value of target (here; element)
-        console.log('Search handleChange: ' + event.target.value);
-        props.onSearch(event)
-    };
-    React.useState()
-    return (
-        <div>
-            <label htmlFor="search">Search: </label>
-            <input
-                id="search"
-                type="text"
-                onChange={handleChange}
-                value={props.onSearch}
+const List = ({list}) => (
+    <ul>
+        {list.map(({objectID, ...item}) => (
+            <Item
+                key={item.objectID}
+                {...item}
             />
-            <p>
-                Searching for: <strong>{props.searchTerm}</strong>
-            </p>
-        </div>
-    );
-};
+        ))}
+    </ul>
+)
+
+
+const Item = ({title, url, author, num_comments, points}) => (
+    <li>
+        <a href={url}>{title}</a>
+        <ul>
+            <li>{author}</li>
+            <li>{num_comments}</li>
+            <li>{points}</li>
+        </ul>
+    </li>
+)
+
+const Search = ({search, onSearch}) => (
+    <div>
+        <label htmlFor="search">Search: </label>
+        <input
+            id="search"
+            type="text"
+            onChange={onSearch}
+            value={search}
+        />
+    </div>
+)
 
 
 export default App;
