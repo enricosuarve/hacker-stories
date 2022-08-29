@@ -25,6 +25,7 @@ const initialStories = [
     },
 ];
 
+
 const getAsyncStories = () =>
     new Promise((resolve) =>
         setTimeout(
@@ -55,8 +56,9 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
     console.log('App renders');
-    const [isLoading, setIsLoading] = React.useState(false);
     const [searchTerm, setSearchTerm] = useStorageState('search', '');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState(false);
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -69,7 +71,8 @@ const App = () => {
         getAsyncStories().then(result => {
             setStories(result.data.stories);
             setIsLoading(false);
-        });
+        })
+            .catch(()=>setIsError(true));
     }, []);
 
     const searchedStories = stories.filter(function (story) {
@@ -90,7 +93,8 @@ const App = () => {
                 Hello {getTitle('React')}
             </h1>
             <h2>
-                {isLoading?"Loading...":undefined}
+                {isLoading ? "Loading..." : undefined}
+                {isError && <p>Something went wrong...</p>}
             </h2>
             <InputWithLabel
                 id="search"
