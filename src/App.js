@@ -25,6 +25,13 @@ const initialStories = [
     },
 ];
 
+const getAsyncStories = () =>
+    new Promise((resolve) =>
+        setTimeout(
+            () => resolve({data: {stories: initialStories}}),
+            2000
+        )
+    );
 
 const getTitle = (title) => {
     console.log('getting title');
@@ -48,13 +55,19 @@ const useStorageState = (key, initialState) => {
 const App = () => {
     console.log('App renders');
 
-    const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
+    const [searchTerm, setSearchTerm] = useStorageState('search', '');
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const [stories, setStories] = React.useState(initialStories)
+    const [stories, setStories] = React.useState([]);
+
+    React.useEffect(() => {
+        getAsyncStories().then(result => {
+            setStories(result.data.stories);
+        });
+    }, []);
 
     const searchedStories = stories.filter(function (story) {
         return story.title.toLowerCase().includes(searchTerm.toLowerCase());
