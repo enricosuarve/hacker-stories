@@ -12,9 +12,9 @@ const getTitle = (title) => {
 }
 
 
-const useStorageState = (key, initialstate) => {
+const useStorageState = (key, initialState) => {
     const [value, setValue] = React.useState(
-        localStorage.getItem(key) || initialstate
+        localStorage.getItem(key) || initialState
     );
 
     React.useEffect(() => {
@@ -68,6 +68,7 @@ const App = () => {
                 id="search"
                 value={searchTerm}
                 onInputChange={handleSearch}
+                isFocused
             >
                 Search:
             </InputWithLabel>
@@ -77,7 +78,7 @@ const App = () => {
 }
 
 
-const InputWithLabel = ({id, value, onInputChange, type = 'text', children}) => (
+const InputWithLabel = ({id, value, onInputChange, type = 'text', children, isFocused}) => (
     <>
         <label htmlFor={id}>{children}</label>
         &nbsp;
@@ -86,6 +87,7 @@ const InputWithLabel = ({id, value, onInputChange, type = 'text', children}) => 
             type={type}
             value={value}
             onChange={onInputChange}
+            autoFocus={isFocused}
         />
     </>
 );
