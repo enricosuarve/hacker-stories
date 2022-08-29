@@ -48,7 +48,7 @@ const App = () => {
         },
     ];
 
-    const [searchTerm, setSearchTerm] = useStorageState('search','React');
+    const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -64,11 +64,31 @@ const App = () => {
                 {welcome.greeting} {welcome.title}<br/>
                 Hello {getTitle('React')}
             </h1>
-            <Search onSearch={handleSearch} searchTerm={searchTerm}/>
+            <InputWithLabel
+                id="search"
+                value={searchTerm}
+                onInputChange={handleSearch}
+            >
+                Search:
+            </InputWithLabel>
             <List list={searchedStories} extraline={"test"}/>
         </div>
     );
 }
+
+
+const InputWithLabel = ({id, value, onInputChange, type = 'text', children}) => (
+    <>
+        <label htmlFor={id}>{children}</label>
+        &nbsp;
+        <input
+            id={id}
+            type={type}
+            value={value}
+            onChange={onInputChange}
+        />
+    </>
+);
 
 
 const List = ({list}) => (
@@ -95,18 +115,5 @@ const Item = ({item}) => (
         </ul>
     </li>
 )
-
-const Search = ({searchTerm, onSearch}) => (
-    <>
-        <label htmlFor="search">Search: </label>
-        <input
-            id="search"
-            type="text"
-            onChange={onSearch}
-            value={searchTerm}
-        />
-    </>
-)
-
 
 export default App;
