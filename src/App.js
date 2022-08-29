@@ -33,6 +33,7 @@ const getAsyncStories = () =>
         )
     );
 
+
 const getTitle = (title) => {
     console.log('getting title');
     return title;
@@ -54,7 +55,7 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
     console.log('App renders');
-
+    const [isLoading, setIsLoading] = React.useState(false);
     const [searchTerm, setSearchTerm] = useStorageState('search', '');
 
     const handleSearch = (event) => {
@@ -64,8 +65,10 @@ const App = () => {
     const [stories, setStories] = React.useState([]);
 
     React.useEffect(() => {
+        setIsLoading(true)
         getAsyncStories().then(result => {
             setStories(result.data.stories);
+            setIsLoading(false);
         });
     }, []);
 
@@ -86,6 +89,9 @@ const App = () => {
                 {welcome.greeting} {welcome.title}<br/>
                 Hello {getTitle('React')}
             </h1>
+            <h2>
+                {isLoading?"Loading...":undefined}
+            </h2>
             <InputWithLabel
                 id="search"
                 value={searchTerm}
