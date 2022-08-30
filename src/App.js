@@ -7,12 +7,10 @@ const welcome = {
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
-
 const getTitle = (title) => {
     console.log('getting title');
     return title;
 }
-
 
 const useStorageState = (key, initialState) => {
     const [value, setValue] = React.useState(
@@ -63,7 +61,7 @@ const storiesReducer = (state, action) => {
 
 const App = () => {
     console.log('App renders');
-    const [searchTerm, setSearchTerm] = useStorageState('search', '');
+    const [searchTerm, setSearchTerm] = useStorageState('search', 'react');
     // const [isLoading, setIsLoading] = React.useState(false);
     // const [isError, setIsError] = React.useState(false);
     const [stories, dispatchStories] = React.useReducer(storiesReducer,
@@ -75,9 +73,10 @@ const App = () => {
 
 
     React.useEffect(() => {
+        if (searchTerm === '') return;
         dispatchStories({type: 'STORIES_FETCH_INIT'});
 
-        fetch(`${API_ENDPOINT}react`) //B
+        fetch(`${API_ENDPOINT}${searchTerm}`) //B
             .then((response) => response.json())
             .then(result => {
                 dispatchStories({
@@ -88,12 +87,12 @@ const App = () => {
             .catch(() =>
                 dispatchStories({type: 'STORIES_FETCH_FAILURE',})
             );
-    }, []);
+    }, [searchTerm]);
 
 
-    const searchedStories = stories.data.filter((story) =>
-        story.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // const searchedStories = stories.data.filter((story) =>
+    //     story.title.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
 
     const handleRemoveStory = (item) => {
         dispatchStories({
@@ -120,7 +119,7 @@ const App = () => {
             >
                 Search:
             </InputWithLabel>
-            <List list={searchedStories} onRemoveItem={handleRemoveStory}/>
+            <List list={stories.data} onRemoveItem={handleRemoveStory}/>
         </div>
     );
 }
