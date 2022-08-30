@@ -62,8 +62,6 @@ const storiesReducer = (state, action) => {
 const App = () => {
     console.log('App renders');
     const [searchTerm, setSearchTerm] = useStorageState('search', 'react');
-    // const [isLoading, setIsLoading] = React.useState(false);
-    // const [isError, setIsError] = React.useState(false);
     const [stories, dispatchStories] = React.useReducer(storiesReducer,
         {data: [], isLoading: false, isError: false}
     );
@@ -72,11 +70,12 @@ const App = () => {
     };
 
 
-    React.useEffect(() => {
-        if (searchTerm === '') return;
+    // A
+    const handleFetchStories = React.useCallback(() => { // B
+        if (!searchTerm) return;
         dispatchStories({type: 'STORIES_FETCH_INIT'});
 
-        fetch(`${API_ENDPOINT}${searchTerm}`) //B
+        fetch(`${API_ENDPOINT}${searchTerm}`)
             .then((response) => response.json())
             .then(result => {
                 dispatchStories({
@@ -87,12 +86,11 @@ const App = () => {
             .catch(() =>
                 dispatchStories({type: 'STORIES_FETCH_FAILURE',})
             );
-    }, [searchTerm]);
+    }, [searchTerm]); // E
 
-
-    // const searchedStories = stories.data.filter((story) =>
-    //     story.title.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+    React.useEffect(() => {
+        handleFetchStories(); // C
+    }, [handleFetchStories]); // D
 
     const handleRemoveStory = (item) => {
         dispatchStories({
@@ -126,13 +124,10 @@ const App = () => {
 
 
 const InputWithLabel = ({id, value, onInputChange, type = 'text', children, isFocused}) => {
-    //A
     const inputRef = React.useRef();
 
-    //C
     React.useEffect(() => {
         if (isFocused && inputRef.current) {
-            //D
             inputRef.current.focus();
         }
     }, [isFocused]);
