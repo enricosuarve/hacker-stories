@@ -72,8 +72,9 @@ const App = () => {
     const handleSearchInput = (event) => {
         setSearchTerm(event.target.value);
     };
-    const handleSearchSubmit = () => {
+    const handleSearchSubmit = (event) => {
         setUrl(`${API_ENDPOINT}${searchTerm}`);
+        event.preventDefault();
     };
 
 
@@ -118,27 +119,34 @@ const App = () => {
                 {stories.isLoading ? "Loading..." : undefined}
                 {stories.isError && <p>Something went wrong...</p>}
             </h2>
-            <InputWithLabel
-                id="search"
-                value={searchTerm}
-                onInputChange={handleSearchInput}
-                isFocused
-            >
-                Search:
-            </InputWithLabel>
-            <button
-                type="button"
-                disabled={!searchTerm}
-                onClick={handleSearchSubmit}
-            >
-                Get Some
-            </button>
+            <SearchForm onSearchInput={handleSearchInput}
+                        onSearchSubmit={handleSearchSubmit}
+                        searchTerm={searchTerm}
+            />
             <List list={stories.data} onRemoveItem={handleRemoveStory}/>
         </div>
     );
 }
 
+const SearchForm =({
+    searchTerm,
+    onSearchInput,
+    onSearchSubmit,
+})=>
+    (  <form onSubmit={onSearchSubmit}>
+        <InputWithLabel
+            id="search"
+            value={searchTerm}
+            onInputChange={onSearchInput}
+            isFocused
+        >
+            Search:
+        </InputWithLabel>
+        <button type="submit" disabled={!searchTerm}>
+            Get Some
+        </button>
 
+    </form>);
 const InputWithLabel = ({id, value, onInputChange, type = 'text', children, isFocused}) => {
     const inputRef = React.useRef();
 
