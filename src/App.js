@@ -65,8 +65,14 @@ const App = () => {
     const [stories, dispatchStories] = React.useReducer(storiesReducer,
         {data: [], isLoading: false, isError: false}
     );
-    const handleSearch = (event) => {
+    const [url,setUrl]= React.useState(
+        `${API_ENDPOINT}${searchTerm}`
+    );
+    const handleSearchInput = (event) => {
         setSearchTerm(event.target.value);
+    };
+    const handleSearchSubmit = () => {
+        setUrl(`${API_ENDPOINT}${searchTerm}`);
     };
 
 
@@ -75,7 +81,7 @@ const App = () => {
         if (!searchTerm) return;
         dispatchStories({type: 'STORIES_FETCH_INIT'});
 
-        fetch(`${API_ENDPOINT}${searchTerm}`)
+        fetch(url)
             .then((response) => response.json())
             .then(result => {
                 dispatchStories({
@@ -86,7 +92,7 @@ const App = () => {
             .catch(() =>
                 dispatchStories({type: 'STORIES_FETCH_FAILURE',})
             );
-    }, [searchTerm]); // E
+    }, [url]); // E
 
     React.useEffect(() => {
         handleFetchStories(); // C
@@ -112,11 +118,18 @@ const App = () => {
             <InputWithLabel
                 id="search"
                 value={searchTerm}
-                onInputChange={handleSearch}
+                onInputChange={handleSearchInput}
                 isFocused
             >
                 Search:
             </InputWithLabel>
+            <button
+                type="button"
+                disabled={!searchTerm}
+                onClick={handleSearchSubmit}
+            >
+                Get Some
+            </button>
             <List list={stories.data} onRemoveItem={handleRemoveStory}/>
         </div>
     );
